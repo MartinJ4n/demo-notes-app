@@ -2,9 +2,9 @@ import * as sst from "@serverless-stack/resources";
 
 export default class StorageStack extends sst.Stack {
   // Public reference to the bucket
-  bucket;
+  public readonly bucket;
   // Public reference to the table
-  table;
+  public readonly table;
 
   constructor(scope: sst.App, id: string, props?: sst.StackProps) {
     super(scope, id, props);
