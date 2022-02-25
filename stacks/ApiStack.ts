@@ -14,6 +14,8 @@ export default class ApiStack extends sst.Stack {
 
     // Create the API
     this.api = new sst.Api(this, "Api", {
+      //@ts-ignore
+      defaultAuthorizationType: "AWS_IAM",
       defaultFunctionProps: {
         environment: {
           TABLE_NAME: table.tableName,
