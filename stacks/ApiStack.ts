@@ -1,4 +1,5 @@
 import * as sst from "@serverless-stack/resources";
+import { HttpMethod } from "@aws-cdk/aws-apigatewayv2-alpha";
 
 interface ApiStackProps extends sst.StackProps {
   table: sst.Table;
@@ -21,6 +22,10 @@ export default class ApiStack extends sst.Stack {
           TABLE_NAME: table.tableName,
           STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY!,
         },
+      },
+      cors: {
+        //@ts-ignore
+        allowMethods: [HttpMethod.GET],
       },
       routes: {
         "POST   /notes": "src/create.main",
