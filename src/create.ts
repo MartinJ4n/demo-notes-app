@@ -1,5 +1,5 @@
-import * as uuid from "uuid";
 import handler from "./util/handler";
+import * as uuid from "uuid";
 import dynamoDb from "./util/dynamodb";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore

@@ -1,5 +1,5 @@
-import Stripe from "stripe";
 import handler from "./util/handler";
+import Stripe from "stripe";
 import { calculateCost } from "./util/cost";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
