@@ -1,16 +1,26 @@
-import * as sst from "@serverless-stack/resources";
+import {
+  App,
+  Stack,
+  StackProps,
+  Table,
+  Bucket,
+  TableFieldType,
+} from "@serverless-stack/resources";
+import { HttpMethods } from "aws-cdk-lib/aws-s3";
 
-export default class StorageStack extends sst.Stack {
-  // Public reference to the bucket
-  public readonly bucket;
-  // Public reference to the table
-  public readonly table;
+export default class StorageStack extends Stack {
+  // Public reference to the bucket & table
+  public readonly bucket: Bucket;
+  public readonly table: Table;
 
-  constructor(scope: sst.App, id: string, props?: sst.StackProps) {
+  constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    const { GET, POST, PUT, DELETE } = HttpMethods;
+    const { STRING } = TableFieldType;
+
     // Create an S3 bucket
-    this.bucket = new sst.Bucket(this, "Uploads", {
+    this.bucket = new Bucket(this, "Uploads", {
       s3Bucket: {
         // Allow client side access to the bucket from a different domain
         cors: [
@@ -18,18 +28,17 @@ export default class StorageStack extends sst.Stack {
             maxAge: 3000,
             allowedOrigins: ["*"],
             allowedHeaders: ["*"],
-            //@ts-ignore
-            allowedMethods: ["GET", "PUT", "POST", "DELETE", "HEAD"],
+            allowedMethods: [GET, POST, PUT, DELETE],
           },
         ],
       },
     });
 
     // Create the DynamoDB table
-    this.table = new sst.Table(this, "Notes", {
+    this.table = new Table(this, "Notes", {
       fields: {
-        userId: sst.TableFieldType.STRING,
-        noteId: sst.TableFieldType.STRING,
+        userId: STRING,
+        noteId: STRING,
       },
       primaryIndex: { partitionKey: "userId", sortKey: "noteId" },
     });

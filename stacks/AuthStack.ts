@@ -1,22 +1,29 @@
-import * as iam from "aws-cdk-lib/aws-iam";
-import * as sst from "@serverless-stack/resources";
+import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
+import {
+  Api,
+  App,
+  Stack,
+  StackProps,
+  Auth,
+  Bucket,
+} from "@serverless-stack/resources";
 
-interface AuthStackProps extends sst.StackProps {
-  api: sst.Api;
-  bucket: sst.Bucket;
+interface AuthStackProps extends StackProps {
+  api: Api;
+  bucket: Bucket;
 }
 
-export default class AuthStack extends sst.Stack {
+export default class AuthStack extends Stack {
   // Public reference to the auth instance
-  public readonly auth;
+  public readonly auth: Auth;
 
-  constructor(scope: sst.App, id: string, props?: AuthStackProps) {
+  constructor(scope: App, id: string, props: AuthStackProps) {
     super(scope, id, props);
 
-    const { api, bucket } = props!;
+    const { api, bucket } = props;
 
     // Create a Cognito User Pool and Identity Pool
-    this.auth = new sst.Auth(this, "Auth", {
+    this.auth = new Auth(this, "Auth", {
       cognito: {
         userPool: {
           // Users can login with their email and password
@@ -29,9 +36,9 @@ export default class AuthStack extends sst.Stack {
       // Allow access to the API
       api,
       // Policy granting access to a specific folder in the bucket
-      new iam.PolicyStatement({
+      new PolicyStatement({
         actions: ["s3:*"],
-        effect: iam.Effect.ALLOW,
+        effect: Effect.ALLOW,
         resources: [
           bucket.bucketArn + "/private/${cognito-identity.amazonaws.com:sub}/*",
         ],

@@ -1,22 +1,28 @@
-import * as sst from "@serverless-stack/resources";
-import { HttpMethod } from "@aws-cdk/aws-apigatewayv2-alpha";
+import {
+  Api,
+  ApiAuthorizationType,
+  App,
+  Stack,
+  StackProps,
+  Table,
+} from "@serverless-stack/resources";
 
-interface ApiStackProps extends sst.StackProps {
-  table: sst.Table;
+interface ApiStackProps extends StackProps {
+  table: Table;
 }
 
-export default class ApiStack extends sst.Stack {
+export default class ApiStack extends Stack {
   // Public reference to the API
-  public readonly api;
+  public readonly api: Api;
 
-  constructor(scope: sst.App, id: string, props?: ApiStackProps) {
+  constructor(scope: App, id: string, props: ApiStackProps) {
     super(scope, id, props);
-    const { table } = props!;
+
+    const { table } = props;
 
     // Create the API
-    this.api = new sst.Api(this, "Api", {
-      //@ts-ignore
-      defaultAuthorizationType: "AWS_IAM",
+    this.api = new Api(this, "Api", {
+      defaultAuthorizationType: ApiAuthorizationType.AWS_IAM,
       defaultFunctionProps: {
         environment: {
           TABLE_NAME: table.tableName,
@@ -25,9 +31,9 @@ export default class ApiStack extends sst.Stack {
       },
 
       routes: {
-        "POST   /notes": "src/create.main",
-        "GET    /notes/{id}": "src/get.main",
         "GET    /notes": "src/list.main",
+        "GET    /notes/{id}": "src/get.main",
+        "POST   /notes": "src/create.main",
         "PUT    /notes/{id}": "src/update.main",
         "DELETE /notes/{id}": "src/delete.main",
         "POST   /billing": "src/billing.main",

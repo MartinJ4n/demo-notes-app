@@ -1,16 +1,16 @@
 import AWS from "aws-sdk";
+import { GetParams } from "../get";
+import { ListParams } from "../list";
+import { CreateParams } from "../create";
+import { UpdateParams } from "../update";
+import { DeleteParams } from "../delete";
 
 const client = new AWS.DynamoDB.DocumentClient();
 
 export default {
-  //@ts-ignore
-  get: (params) => client.get(params).promise(),
-  //@ts-ignore
-  put: (params) => client.put(params).promise(),
-  //@ts-ignore
-  query: (params) => client.query(params).promise(),
-  //@ts-ignore
-  update: (params) => client.update(params).promise(),
-  //@ts-ignore
-  delete: (params) => client.delete(params).promise(),
+  get: (params: GetParams) => client.get(params).promise(),
+  query: (params: ListParams) => client.query(params).promise(),
+  put: (params: CreateParams) => client.put(params).promise(),
+  update: (params: UpdateParams) => client.update(params).promise(),
+  delete: (params: DeleteParams) => client.delete(params).promise(),
 };

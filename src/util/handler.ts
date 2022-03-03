@@ -1,8 +1,24 @@
 import * as debug from "./debug";
+import {
+  APIGatewayProxyEventV2,
+  APIGatewayProxyHandlerV2,
+  APIGatewayProxyResult,
+  Context,
+} from "aws-lambda";
 
-//@ts-ignore
-export default function handler(lambda) {
-  //@ts-ignore
+export interface CustomAuth {
+  authorizer: {
+    iam: {
+      cognitoIdentity: {
+        identityId: string;
+      };
+    };
+  };
+}
+
+//: (event: APIGatewayProxyEventV2, context: Context) => any
+
+export default function handler(lambda: any): APIGatewayProxyHandlerV2 {
   return async function (event, context) {
     let body, statusCode;
 
@@ -13,10 +29,9 @@ export default function handler(lambda) {
       // Run the Lambda
       body = await lambda(event, context);
       statusCode = 200;
-    } catch (e) {
+    } catch (e: any) {
       // Print debug messages
       debug.flush(e);
-      //@ts-ignore
       body = { error: e.message };
       statusCode = 500;
     }

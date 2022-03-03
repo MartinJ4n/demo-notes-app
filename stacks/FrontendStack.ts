@@ -1,19 +1,27 @@
-import * as sst from "@serverless-stack/resources";
+import {
+  Api,
+  App,
+  Stack,
+  StackProps,
+  Auth,
+  Bucket,
+  ReactStaticSite,
+} from "@serverless-stack/resources";
 
-interface FrontendStackProps extends sst.StackProps {
-  api: sst.Api;
-  auth: sst.Auth;
-  bucket: sst.Bucket;
+interface FrontendStackProps extends StackProps {
+  api: Api;
+  auth: Auth;
+  bucket: Bucket;
 }
 
-export default class FrontendStack extends sst.Stack {
-  constructor(scope: sst.App, id: string, props: FrontendStackProps) {
+export default class FrontendStack extends Stack {
+  constructor(scope: App, id: string, props: FrontendStackProps) {
     super(scope, id, props);
 
     const { api, auth, bucket } = props;
 
     // Define our React app
-    const site = new sst.ReactStaticSite(this, "ReactSite", {
+    const site = new ReactStaticSite(this, "ReactSite", {
       path: "frontend",
       // Pass in our environment variables
       environment: {
